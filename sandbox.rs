@@ -40,16 +40,23 @@ pub trait ChildSandboxMethods {
     fn activate(&self) -> Result<(),()>;
 }
 
+#[cfg(unix)]
 fn cstring<T>(path: T) -> CString
     where T: AsRef<OsStr>
 {
+    use std::os::unix::ffi::OsStrExt;
     let path = path.as_ref();
-    let bytes = if cfg!(windows) {
-        path.to_str().unwrap().as_bytes()
-    } else {
-        use std::os::unix::ffi::OsStrExt;
-        path.as_bytes()
-    };
+    let bytes = path.as_bytes();
+    CString::new(bytes).unwrap()
+}
+
+#[cfg(target_os = "wasi")]
+fn cstring<T>(path: T) -> CString
+    where T: AsRef<OsStr>
+{
+    use std::os::wasi::ffi::OsStrExt;
+    let path = path.as_ref();
+    let bytes = path.as_bytes();
     CString::new(bytes).unwrap()
 }
 

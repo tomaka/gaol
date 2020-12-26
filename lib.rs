@@ -25,6 +25,8 @@ pub mod platform {
     pub use platform::freebsd::{ChildSandbox, Operation, Sandbox};
     #[cfg(any(target_os="android", target_os="linux", target_os="macos", target_os="freebsd"))]
     pub use platform::unix::process::{self, Process};
+    #[cfg(any(target_os = "wasi"))]
+    pub use platform::wasi::{ChildSandbox, Operation, Sandbox, process::{self, Process}};
 
     #[cfg(any(target_os="android", target_os="linux"))]
     pub mod linux;
@@ -34,5 +36,7 @@ pub mod platform {
     pub mod freebsd;
     #[cfg(any(target_os="android", target_os="linux", target_os="macos", target_os="freebsd"))]
     pub mod unix;
+    #[cfg(any(target_os = "wasi"))]
+    pub mod wasi;
 }
 
